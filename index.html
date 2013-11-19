@@ -100,7 +100,7 @@
 	      return size + ' B';
 	    } else if (size < MB) {
 	      return (size / KB).toFixed(0) + ' KB';  
-	    } else if (size < MB) {
+	    } else if (size < GB) {
 	      return (size / MB).toFixed(2) + ' MB';  
 	    }
 	    return (size / GB).toFixed(2) + ' GB';  
@@ -138,7 +138,7 @@
            var listBucketResult = $(xml).find('ListBucketResult');
            
            // set a reasonable title instead of "Bucket loading"
-           var title = "Index of bucket: " + listBucketResult.find('Name').text();
+           var title = 'Index of bucket "' + listBucketResult.find('Name').text() + '"';
            document.title = title;
            $('#h1-title').text(title);
            
