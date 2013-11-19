@@ -40,31 +40,6 @@ while(s.length+ret.length<l){
 return ret;
 }
 
-
-location.querystring = (function() {
-	// The return is a collection of key/value pairs
-	var result = {};
-
-	// Gets the query string with a preceeding '?'
-	var querystring = location.search;
-
-	// document.location.search is empty if a query string is absent
-	if (!querystring)
-		return result;
-
-	// substring(1) to remove the '?'
-	var pairs = querystring.substring(1).split("&");
-	var splitPair;
-
-	// Load the key/values of the return collection
-	for (var i = 0; i < pairs.length; i++) {
-		splitPair = pairs[i].split("=");
-		result[splitPair[0]] = splitPair[1];
-	}
-
-	return result;
-})();
-
 function createRequestObject(){
 	var request_o; //declare the variable to hold the object.
 	var browser = navigator.appName; //find the browser name
