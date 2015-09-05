@@ -1,11 +1,11 @@
 <html>
 	<head>
-  <!-- 
+  <!--
 
   Amazon S3 Bucket listing.
 
 
-  Copyright (C) 2008 Francesco Pasqualini 
+  Copyright (C) 2008 Francesco Pasqualini
 
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
   -->
   <!--
 
-  Modified by Nolan Lawson!  (http://nolanlawson.com).  I'm keeping the spirit of the 
+  Modified by Nolan Lawson!  (http://nolanlawson.com).  I'm keeping the spirit of the
   GPL alive by issuing this with the same license!
 
   -->
@@ -41,13 +41,13 @@
 	      margin-right: 4px;
 	    }
 	  </style>
-	    
+
 	  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	  <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.1.2/handlebars.min.js"></script>
 	  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.4.0/moment.min.js"></script>
 	</head>
 	<body>
-	  
+
 	  <div class="container">
   	  <h1 id="h1-title">Bucket loading...</h1>
   	  <table class="hide-while-loading table table-striped">
@@ -60,10 +60,10 @@
   	      </tr>
   	    </thead>
   	    <tbody id="tbody-content">
-  	    </tbody> 
+  	    </tbody>
   	  </table>
 	  </div>
-	  
+
   <script id="file-or-folder" type="text/x-handlebars-template">
     <tr>
       {{#if isFolder}}
@@ -74,9 +74,9 @@
         <a href="{{url}}">{{simpleFilename}}</a></td>
       {{/if}}
       <td>{{friendlyLastModified}}</td>
-      
+
       <td>{{friendlySizeName}}</td>
-      <td>{{type}}</td>          
+      <td>{{type}}</td>
     </tr>
   </script>
 	<script>
@@ -84,41 +84,40 @@
 	  "use strict";
 	  var FOLDER_PATTERN = new RegExp('_\\$folder\\$$');
 	  var TYPE_PATTERN = new RegExp('\\.([^\\.\\s]{1,10})$');
-	  	  
-	  var bucketUrl = location.protocol + '//' + location.hostname;
-	  
+		var KB = 1024;
+		var MB = 1000000;
+		var GB = 1000000000;
+
+    // replace last /index.html to get bucket root
+	  var bucketUrl = document.location.href.replace(/\/[^\/]+$/, '');
+		var compiledTemplate;
+
     // return e.g. 1.2KB, 1.3MB, 2GB, etc.
 	  function toFriendlySizeName(size){
-	    
-	    var KB = 1024;
-	    var MB = 1000000;
-	    var GB = 1000000000;
-	    
 	    if (size === 0) {
 	      return '';
 	    } else if (size < KB) {
 	      return size + ' B';
 	    } else if (size < MB) {
-	      return (size / KB).toFixed(0) + ' KB';  
+	      return (size / KB).toFixed(0) + ' KB';
 	    } else if (size < GB) {
-	      return (size / MB).toFixed(2) + ' MB';  
+	      return (size / MB).toFixed(2) + ' MB';
 	    }
-	    return (size / GB).toFixed(2) + ' GB';  
+	    return (size / GB).toFixed(2) + ' GB';
 	  }
-	  
-	  
+
+
 	  // POJO describing a file or a folder
 	  function FileOrFolder(lastModified, etag, size, key){
 	    var self = this;
-	    
+
 	    self.lastModified = lastModified;
 	    self.etag = etag;
 	    self.size = size;
 	    self.key = key;
-	    
-	    
+
 	    // init logic
-	    self.isFolder = FOLDER_PATTERN.exec(self.key);
+	    self.isFolder = FOLDER_PATTERN.test(self.key);
 	    self.filename = self.isFolder ? self.key.replace(FOLDER_PATTERN,'') : self.key;
 	    self.url = bucketUrl + '/' + self.key;
 	    self.levels = self.filename.split('/');
@@ -129,59 +128,63 @@
 	    self.type = self.isFolder ? 'Folder ' : (foundTypes ? (foundTypes[1].toUpperCase() + ' file') : 'Unknown');
 	    self.friendlyLastModified = moment(lastModified).format('MMM Do YYYY, hh:mm:ss a');
 	  }
-	  
 
-	  $.ajax
-     ({
+		function onAjaxSuccess(xml) {
+			var listBucketResult = $(xml).find('ListBucketResult');
+
+			// set a reasonable title instead of "Bucket loading"
+			var title = 'Index of bucket "' + listBucketResult.find('Name').text() + '"';
+			document.title = title;
+			$('#h1-title').text(title);
+
+			var $tbodyContent = $('#tbody-content');
+
+			// create the file or folder objects
+
+			var filesOrFolders = [];
+
+			listBucketResult.find('Contents').each(function(idx, element){
+
+				var $element = $(element);
+
+				var fileOrFolder = new FileOrFolder(
+					 $element.find('LastModified').text(),
+					 $element.find('ETag').text(),
+					 $element.find('Size').text(),
+					 $element.find('Key').text()
+				);
+
+				filesOrFolders.push(fileOrFolder);
+			});
+
+			// sort
+			filesOrFolders.sort(function(left, right){
+				if (left.levels === right.levels) {
+					return 0;
+				} else if (left.levels < right.levels) {
+					return -1;
+				}
+				return 1;
+			});
+
+			// fill in the rows
+			var str = '';
+			for (var i = 0; i < filesOrFolders.length; i ++) {
+				str += compiledTemplate(filesOrFolders[i]);
+			}
+			$tbodyContent.append(str);
+			$('.hide-while-loading').show();
+		}
+
+		$.ajax({
          url: bucketUrl,
-         success: function(xml) {
-           var listBucketResult = $(xml).find('ListBucketResult');
-           
-           // set a reasonable title instead of "Bucket loading"
-           var title = 'Index of bucket "' + listBucketResult.find('Name').text() + '"';
-           document.title = title;
-           $('#h1-title').text(title);
-           
-           var $tbodyContent = $('#tbody-content');
-           
-           // create the file or folder objects
-           
-           var filesOrFolders = [];
-           
-           listBucketResult.find('Contents').each(function(idx, element){
-             
-             var $element = $(element);
-             
-             var fileOrFolder = new FileOrFolder(
-                $element.find('LastModified').text(),
-                $element.find('ETag').text(),
-                $element.find('Size').text(),
-                $element.find('Key').text()
-             );
-             
-             filesOrFolders.push(fileOrFolder);
-           });
-           
-           // sort
-           filesOrFolders.sort(function(left, right){
-             if (left.levels === right.levels) {
-               return 0;
-             } else if (left.levels < right.levels) {
-               return -1;
-             }
-             return 1;
-           })
-           
-           // fill in the rows
-           var template = Handlebars.compile($('#file-or-folder').html());
-           $.each(filesOrFolders, function(idx, element){
-              $tbodyContent.append(template(element));
-           });
-           $('.hide-while-loading').show();
-         }
-     });
+         success: onAjaxSuccess
+		});
+
+    // compile while ajax is in progress
+		compiledTemplate = Handlebars.compile($('#file-or-folder').html());
+
 	})(jQuery);
-	</script> 
+	</script>
 	</body>
 </html>
-
