@@ -1,6 +1,8 @@
 Pretty S3 index.html
 ====================
 
+⚠**Maintenance note**⚠: this project is archived and unmaintained. For a more up-to-date version, you may check out the [varous forks](https://github.com/nolanlawson/pretty-s3-index-html/issues/6).
+
 Author
 -------
 Nolan Lawson
