@@ -1,190 +1,234 @@
+
 <html>
-	<head>
-  <!--
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> 
+  <meta name="description" content="Anti DDoS Security Check - Api.Minhkhue.link"> 
+  <meta name="author" content="Minhkhue.link"> 
+  <title>Anti DDoS — Security Check</title> 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pattaya|Potta One|Rowdies|Braah One|Chivo"> 
+  <link rel="icon" href="https://i.pinimg.com/564x/56/f6/43/56f643d33126d3800d5db8309fafe77c.jpg"> 
+  <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px rgb(106, 96, 255);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgb(0, 255, 98);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ffbc;
+        }
+    </style>
+ </head> 
+ <body class="bodystyle"> 
+  <style>
+        * {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none
+}
 
-  Amazon S3 Bucket listing.
+body {
+  /*  background: url('https://i.pinimg.com/564x/ff/5c/33/ff5c3321a863db98821f6045453aac9b.jpg') no-repeat;*/
+  background-color: #fcfcfc;
+    background-size: cover;
+    background-position: center;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+.sucurify-icon {
 
+}
+.Container {
+    text-align: center;
+    margin-top: 5%;
+    width: 100%;
+    overflow: hidden;
+    font-size: 1em;
+}
 
-  Copyright (C) 2008 Francesco Pasqualini
+@media (max-width: 768px) {
+    .Container {
+        margin-top: 15%;
+        font-size: 0.8em; 
+    }
+}
 
-      This program is free software: you can redistribute it and/or modify
-      it under the terms of the GNU General Public License as published by
-      the Free Software Foundation, either version 3 of the License, or
-      (at your option) any later version.
-
-      This program is distributed in the hope that it will be useful,
-      but WITHOUT ANY WARRANTY; without even the implied warranty of
-      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-      GNU General Public License for more details.
-
-      You should have received a copy of the GNU General Public License
-      along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-  -->
-  <!--
-
-  Modified by Nolan Lawson!  (http://nolanlawson.com).  I'm keeping the spirit of the
-  GPL alive by issuing this with the same license!
-
-  -->
-
-	  <title>Bucket loading...</title>
-	  <link href="//netdna.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet"/>
-	  <style>
-	    .hide-while-loading {
-	      display:none;
-	    }
-	    .i-expand-collapse {
-	      opacity: 0.3;
-	    }
-	    .i-file-or-folder {
-	      margin-right: 4px;
-	    }
-	  </style>
-
-	  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	  <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.1.2/handlebars.min.js"></script>
-	  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.4.0/moment.min.js"></script>
-	</head>
-	<body>
-
-	  <div class="container">
-  	  <h1 id="h1-title">Bucket loading...</h1>
-  	  <table class="hide-while-loading table table-striped">
-  	    <thead>
-  	      <tr>
-  	        <th>Name</th>
-  	        <th>Date Modified</th>
-  	        <th>Size</th>
-  	        <th>Type</th>
-  	      </tr>
-  	    </thead>
-  	    <tbody id="tbody-content">
-  	    </tbody>
-  	  </table>
-	  </div>
-
-  <script id="file-or-folder" type="text/x-handlebars-template">
-    <tr>
-      {{#if isFolder}}
-        <td><i class="icon-chevron-down i-expand-collapse" style="margin-left:calc(({{numLevels}} - 1) * 16px)");></i><i class="icon-folder-open i-file-or-folder" style="margin-left:4px;"></i>
-        {{simpleFilename}}</td>
-      {{else}}
-        <td><i class="icon-file i-file-or-folder"  style="margin-left:calc(({{numLevels}} * 16px) + 4px);"></i>
-        <a href="{{url}}">{{simpleFilename}}</a></td>
-      {{/if}}
-      <td>{{friendlyLastModified}}</td>
-
-      <td>{{friendlySizeName}}</td>
-      <td>{{type}}</td>
-    </tr>
-  </script>
-	<script>
-	(function($){
-	  "use strict";
-	  var FOLDER_PATTERN = new RegExp('_\\$folder\\$$');
-	  var TYPE_PATTERN = new RegExp('\\.([^\\.\\s]{1,10})$');
-		var KB = 1024;
-		var MB = 1000000;
-		var GB = 1000000000;
-
-    // replace last /index.html to get bucket root
-	  var bucketUrl = document.location.href.replace(/\/[^\/]+$/, '');
-		var compiledTemplate;
-
-    // return e.g. 1.2KB, 1.3MB, 2GB, etc.
-	  function toFriendlySizeName(size){
-	    if (size === 0) {
-	      return '';
-	    } else if (size < KB) {
-	      return size + ' B';
-	    } else if (size < MB) {
-	      return (size / KB).toFixed(0) + ' KB';
-	    } else if (size < GB) {
-	      return (size / MB).toFixed(2) + ' MB';
-	    }
-	    return (size / GB).toFixed(2) + ' GB';
-	  }
+.bodystyle {
+    position: fixed;
+    top: 5px;
+    left: 0;
+    width: 100%;
+    height: 99%;
+    text-align: center;
+    background-color: #111;
+    margin: 0;
+    padding: 0;
+    border-style: double;
+    border-radius: 20px;
+    border-color: #ccc;
+    border-width: 2px;
+    box-sizing: border-box;
+    animation-name: bodyborder;
+    animation-iteration-count: infinite;
+    animation-duration: 1s;
+    animation-direction: right;
+}
 
 
-	  // POJO describing a file or a folder
-	  function FileOrFolder(lastModified, etag, size, key){
-	    var self = this;
+            @keyframes bodyborder {
+                30% {
+                    border-color: #666
+                }
 
-	    self.lastModified = lastModified;
-	    self.etag = etag;
-	    self.size = size;
-	    self.key = key;
+                60% {
+                    border-color: #999
+                }
 
-	    // init logic
-	    self.isFolder = FOLDER_PATTERN.test(self.key);
-	    self.filename = self.isFolder ? self.key.replace(FOLDER_PATTERN,'') : self.key;
-	    self.url = bucketUrl + '/' + self.key;
-	    self.levels = self.filename.split('/');
-	    self.numLevels = self.levels.length;
-	    self.simpleFilename = self.levels[self.numLevels - 1];
-	    self.friendlySizeName = toFriendlySizeName(parseInt(self.size,10));
-	    var foundTypes = TYPE_PATTERN.exec(self.simpleFilename);
-	    self.type = self.isFolder ? 'Folder ' : (foundTypes ? (foundTypes[1].toUpperCase() + ' file') : 'Unknown');
-	    self.friendlyLastModified = moment(lastModified).format('MMM Do YYYY, hh:mm:ss a');
-	  }
+                90% {
+                    border-color: #ccc
+                }
+            }
 
-		function onAjaxSuccess(xml) {
-			var listBucketResult = $(xml).find('ListBucketResult');
+            @media (max-width: 768px) {
+  .bodystyle {
+    top: 6px;
+    left: 5px;
+    width: 98%;
+    height: 99%;
+  }
+}
+ul {
+    margin: 0;
+    padding: 0
+}
+h1 {
+    color: #fff;
+    font-family: 'Rowdies';
+}
 
-			// set a reasonable title instead of "Bucket loading"
-			var title = 'Index of bucket "' + listBucketResult.find('Name').text() + '"';
-			document.title = title;
-			$('#h1-title').text(title);
+h2 {
+    font-family: 'Braah One';
+    font-size: 25px;
+    color: silver;
+}
 
-			var $tbodyContent = $('#tbody-content');
+.pulse-container {
+                margin-top: 10px;
+                margin-bottom: 10px;
+                width: 100px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center
+            }
 
-			// create the file or folder objects
+            .pulse-bubble {
+                width: 15px;
+                height: 15px;
+                border-radius: 5px;
+                background-color: violet;
+            }
 
-			var filesOrFolders = [];
+            .pulse-bubble-1 {
+                animation: pulse .4s ease 0s infinite alternate
+            }
 
-			listBucketResult.find('Contents').each(function(idx, element){
+            .pulse-bubble-2 {
+                animation: pulse .4s ease .2s infinite alternate
+            }
 
-				var $element = $(element);
+            .pulse-bubble-3 {
+                animation: pulse .4s ease .4s infinite alternate
+            }
 
-				var fileOrFolder = new FileOrFolder(
-					 $element.find('LastModified').text(),
-					 $element.find('ETag').text(),
-					 $element.find('Size').text(),
-					 $element.find('Key').text()
-				);
+            @keyframes pulse {
+                from {
+                    opacity: 1;
+                    transform: scale(1)
+                }
 
-				filesOrFolders.push(fileOrFolder);
-			});
+                to {
+                    opacity: .25;
+                    transform: scale(.75)
+                }
+            }
 
-			// sort
-			filesOrFolders.sort(function(left, right){
-				if (left.levels === right.levels) {
-					return 0;
-				} else if (left.levels < right.levels) {
-					return -1;
-				}
-				return 1;
-			});
-
-			// fill in the rows
-			var str = '';
-			for (var i = 0; i < filesOrFolders.length; i ++) {
-				str += compiledTemplate(filesOrFolders[i]);
-			}
-			$tbodyContent.append(str);
-			$('.hide-while-loading').show();
-		}
-
-		$.ajax({
-         url: bucketUrl,
-         success: onAjaxSuccess
-		});
-
-    // compile while ajax is in progress
-		compiledTemplate = Handlebars.compile($('#file-or-folder').html());
-
-	})(jQuery);
-	</script>
-	</body>
+.Blob {
+  background: black;
+  border-radius: 50%;
+  margin: 40px;
+  height: 150px;
+  width: 150px; 
+  box-shadow: 0 1px 7px rgb(231, 231, 231);
+  margin-top: 70px;
+}
+    </style> 
+  <section id="Image"> 
+   <div class="Container"> 
+    <img class="Blob" src="https://i.pinimg.com/564x/a8/37/77/a83777652c801087a14ce35fa583179d.jpg" alt="ThanhDieuTV"> 
+    <h1>ANTI DDOS — SECURITY CHECK</h1> 
+    <p style="font-family: Chivo;color: rgb(216, 216, 216);">You won't see the form anymore. <br> We only check browser-based protections.</p> 
+    <strong style="color: rgb(216, 216, 216);font-family: Chivo;">power by <a style="color: #a690d6;" href="//facebook.com/Facebook.User.TaMinhPhat" target="about:blank">Minhkhue.link</a> </strong> 
+   </div> 
+  </section> 
+  <div style="margin-top: 15px;" class="Container"> 
+   <h2>- Waiting Security -</h2> 
+   <center> 
+    <div class="pulse-container"> 
+     <div class="pulse-bubble pulse-bubble-1"></div> 
+     <div class="pulse-bubble pulse-bubble-2"></div> 
+     <div class="pulse-bubble pulse-bubble-3"></div> 
+    </div> 
+   </center>
+  </div> 
+  <br> 
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    var imageElement = document.createElement("img");
+    var imageThanhDieu = document.createElement("div");
+    imageThanhDieu.className = "image";
+    imageThanhDieu.style.position = "fixed";
+    imageThanhDieu.style.right = "0px";
+    imageThanhDieu.style.bottom = "0px";
+    imageThanhDieu.style.zIndex = "-1";
+    var css = `
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px rgb(106, 96, 255);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgb(0, 255, 98);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ffbc;
+        }
+    `;
+    var style = document.createElement("style");
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+    var mediaQuery = window.matchMedia("(max-width: 768px)");
+    if (mediaQuery.matches) {
+    imageThanhDieu.style.display = "none";
+    }
+    imageElement.src = "//api.thanhdieu.com/anime-cb.php";
+    imageElement.alt = "thanhdieu";
+    imageThanhDieu.appendChild(imageElement);
+    document.body.appendChild(imageThanhDieu);
+});
+</script> 
+  <div class="image" style="position: fixed; right: 0px; bottom: 0px; z-index: -1; display: none;">
+   <img src="//api.thanhdieu.com/anime-cb.php" alt="thanhdieu">
+  </div>
+ </body>
 </html>
